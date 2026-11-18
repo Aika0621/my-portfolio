@@ -12,30 +12,54 @@ $experienceCount = (int) $pdo->query('SELECT COUNT(*) FROM experience')->fetchCo
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard | Aika's Portfolio</title><link rel="stylesheet" href="../css/style.css"></head>
-<body>
-<main>
-    <h1>Admin Dashboard</h1>
-    <p>Signed in as <?= escape($_SESSION['admin_email'] ?? '') ?></p>
-    <form method="post" action="logout.php"><input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>"><button type="submit">Log out</button></form>
-    <section>
-        <h2>Website Statistics</h2>
-        <ul><li>Projects: <?= $projectCount ?></li><li>Skills: <?= $skillCount ?></li><li>Messages: <?= $messageCount ?> (<?= $unreadCount ?> unread)</li><li>Experience records: <?= $experienceCount ?></li></ul>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Aika's Portfolio</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-area">
+<header class="admin-topbar">
+    <a class="admin-brand" href="dashboard.php">Aika <span>Admin</span></a>
+    <nav aria-label="Admin navigation">
+        <a href="dashboard.php">Dashboard</a>
+        <a href="profile.php">Profile</a>
+        <a href="projects.php">Projects</a>
+        <a href="messages.php">Messages<?= $unreadCount > 0 ? ' (' . $unreadCount . ')' : '' ?></a>
+        <a href="../index.php">View site</a>
+    </nav>
+</header>
+<main class="admin-main">
+    <div class="admin-page-heading">
+        <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back, <?= escape($_SESSION['admin_email'] ?? '') ?>. Here's your portfolio overview.</p>
+        </div>
+        <form method="post" action="logout.php">
+            <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
+            <button type="submit">Log out</button>
+        </form>
+    </div>
+    <section class="admin-stat-grid" aria-label="Portfolio statistics">
+        <div class="admin-stat-card"><span>Portfolio projects</span><strong><?= $projectCount ?></strong></div>
+        <div class="admin-stat-card"><span>Skills</span><strong><?= $skillCount ?></strong></div>
+        <div class="admin-stat-card"><span>Messages</span><strong><?= $messageCount ?></strong></div>
+        <div class="admin-stat-card"><span>Experience records</span><strong><?= $experienceCount ?></strong></div>
     </section>
-    <section>
-        <h2>Manage Portfolio</h2>
-        <ul>
-            <li><a href="profile.php">Personal profile</a></li>
-            <li><a href="skills.php">Skills</a></li>
-            <li><a href="projects.php">Projects</a></li>
-            <li><a href="records.php?type=education">Education</a></li>
-            <li><a href="records.php?type=experience">Experience</a></li>
-            <li><a href="records.php?type=achievements">Achievements</a></li>
-            <li><a href="settings.php">Website settings</a></li>
-            <li><a href="messages.php">Contact messages</a></li>
-        </ul>
+    <section class="admin-card">
+        <h2>Manage your portfolio</h2>
+        <div class="admin-manage-grid">
+            <a href="profile.php">Personal profile</a>
+            <a href="skills.php">Skills and expertise</a>
+            <a href="projects.php">Projects and images</a>
+            <a href="records.php?type=education">Education</a>
+            <a href="records.php?type=experience">Experience</a>
+            <a href="records.php?type=achievements">Achievements</a>
+            <a href="settings.php">Website settings</a>
+            <a href="messages.php">Contact messages<?= $unreadCount > 0 ? ' · ' . $unreadCount . ' unread' : '' ?></a>
+        </div>
     </section>
-    <p><a href="../index.php">View public portfolio</a></p>
 </main>
 </body>
 </html>

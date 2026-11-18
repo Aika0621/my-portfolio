@@ -52,28 +52,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Aika's Portfolio</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
-<body>
-    <main>
-        <section>
-            <h1>Administrator Login</h1>
-            <?php if ($errorMessage !== ''): ?>
-                <p role="alert"><?= escape($errorMessage) ?></p>
-            <?php endif; ?>
-            <form method="post" action="login.php">
-                <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
-                <p>
-                    <label for="email">Email</label><br>
-                    <input id="email" name="email" type="email" required maxlength="190" autocomplete="username">
-                </p>
-                <p>
-                    <label for="password">Password</label><br>
-                    <input id="password" name="password" type="password" required autocomplete="current-password">
-                </p>
-                <button type="submit">Log in</button>
-            </form>
-            <p><a href="../index.php">Back to portfolio</a></p>
-        </section>
-    </main>
+<body class="admin-area">
+<main class="admin-login-wrap">
+    <section class="admin-login-card">
+        <h1>Welcome back</h1>
+        <p>Sign in to manage your portfolio.</p>
+        <?php if ($errorMessage !== ''): ?>
+            <p class="admin-alert" role="alert"><?= escape($errorMessage) ?></p>
+        <?php endif; ?>
+        <form method="post" action="login.php">
+            <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
+            <p><label for="email">Email</label><input id="email" name="email" type="email" required maxlength="190" autocomplete="username"></p>
+            <p><label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password"></p>
+            <button type="submit">Sign in</button>
+        </form>
+        <a class="admin-back-link" href="../index.php">← Back to portfolio</a>
+    </section>
+</main>
 </body>
 </html>
