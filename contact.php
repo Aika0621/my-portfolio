@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/security.php';
 
 $message = '';
 $profile = $pdo->query('SELECT name, email FROM profile ORDER BY id LIMIT 1')->fetch();
