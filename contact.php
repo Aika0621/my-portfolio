@@ -18,17 +18,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formValues['subject'] = trim($_POST['subject'] ?? '');
     $formValues['message'] = trim($_POST['message'] ?? '');
 
-    if (!filter_var($formValues['email'], FILTER_VALIDATE_EMAIL) || strlen($formValues['name']) < 2 || strlen($formValues['subject']) < 2 || strlen($formValues['message']) < 10) {
+    if (strlen($formValues['name']) < 2 || strlen($formValues['name']) > 120
+        || !filter_var($formValues['email'], FILTER_VALIDATE_EMAIL)
+        || strlen($formValues['subject']) < 2 || strlen($formValues['subject']) > 180
+        || strlen($formValues['message']) < 10) {
         $message = 'Please complete all fields with valid information.';
     } elseif (trim($_POST['website'] ?? '') !== '') {
-        // Silently accept honeypot submissions without storing them.
         $message = 'Thank you. Your message has been sent.';
         $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
     } else {
-        $statement = $pdo->prepare('INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)');
-        $statement->execute([$formValues['name'], $formValues['email'], $formValues['subject'], $formValues['message']]);
-        $message = 'Thank you. Your message has been sent.';
-        $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
+        try {
+            $statement = $pdo->prepare('INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)');
+            $statement->execute([$formValues['name'], $formValues['email'], $formValues['subject'], $formValues['message']]);
+            $message = 'Thank you. Your message has been sent.';
+            $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
+        } catch (PDOException $error) {
+            $message = 'The message could not be saved. Please check that MySQL is running and import database/portfolio.sql again.';
+        }
     }
 }
 ?>
@@ -58,14 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="contact-box">
         <h3>Send Me a Message</h3>
-        <p id="formMessage" role="status" aria-live="polite"><?= escape($message) ?></p>
+        <?php if ($message !== ''): ?><p id="formMessage" role="status" aria-live="polite"><?= escape($message) ?></p><?php endif; ?>
         <form id="contactForm" method="post" action="contact.php">
             <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
             <div style="display:none"><label>Leave blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
             <label for="name">Name:</label><input type="text" id="name" name="name" required minlength="2" maxlength="120" value="<?= escape($formValues['name']) ?>">
             <label for="email">Email:</label><input type="email" id="email" name="email" required maxlength="190" value="<?= escape($formValues['email']) ?>">
             <label for="subject">Subject:</label><input type="text" id="subject" name="subject" required minlength="2" maxlength="180" value="<?= escape($formValues['subject']) ?>">
-            <label for="message">Message:</label><textarea id="message" name="message" required minlength="10"><?= escape($formValues['message']) ?></textarea>
+            <label for="message">Message:</label><textarea id="message" name="message" required minlength="10" maxlength="5000"><?= escape($formValues['message']) ?></textarea>
             <button type="submit">Send Message</button>
         </form>
     </div>
