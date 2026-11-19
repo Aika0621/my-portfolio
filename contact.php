@@ -9,21 +9,26 @@ if (!$profile) {
     $profile = ['name' => 'Aika', 'email' => ''];
 }
 
+$formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     checkCsrfToken();
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $subject = trim($_POST['subject'] ?? '');
-    $contactMessage = trim($_POST['message'] ?? '');
+    $formValues['name'] = trim($_POST['name'] ?? '');
+    $formValues['email'] = trim($_POST['email'] ?? '');
+    $formValues['subject'] = trim($_POST['subject'] ?? '');
+    $formValues['message'] = trim($_POST['message'] ?? '');
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($name) < 2 || strlen($subject) < 2 || strlen($contactMessage) < 10) {
+    if (!filter_var($formValues['email'], FILTER_VALIDATE_EMAIL) || strlen($formValues['name']) < 2 || strlen($formValues['subject']) < 2 || strlen($formValues['message']) < 10) {
         $message = 'Please complete all fields with valid information.';
     } elseif (trim($_POST['website'] ?? '') !== '') {
-        $message = 'Your message could not be sent.';
+        // Silently accept honeypot submissions without storing them.
+        $message = 'Thank you. Your message has been sent.';
+        $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
     } else {
         $statement = $pdo->prepare('INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)');
-        $statement->execute([$name, $email, $subject, $contactMessage]);
+        $statement->execute([$formValues['name'], $formValues['email'], $formValues['subject'], $formValues['message']]);
         $message = 'Thank you. Your message has been sent.';
+        $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
     }
 }
 ?>
@@ -38,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <header>
     <h1>Contact Me</h1>
-    <nav>
+    <nav aria-label="Main navigation">
         <a href="index.php">Home</a><a href="about.php">About</a><a href="skills.php">Skills</a><a href="projects.php">Projects</a><a href="resume.php">Resume</a><a href="contact.php">Contact</a>
     </nav>
 </header>
@@ -53,14 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="contact-box">
         <h3>Send Me a Message</h3>
-        <?php if ($message !== ''): ?><p id="formMessage" role="status"><?= escape($message) ?></p><?php endif; ?>
-        <form id="contactForm" method="post">
+        <p id="formMessage" role="status" aria-live="polite"><?= escape($message) ?></p>
+        <form id="contactForm" method="post" action="contact.php">
             <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
             <div style="display:none"><label>Leave blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
-            <label for="name">Name:</label><input type="text" id="name" name="name" required maxlength="120">
-            <label for="email">Email:</label><input type="email" id="email" name="email" required maxlength="190">
-            <label for="subject">Subject:</label><input type="text" id="subject" name="subject" required maxlength="180">
-            <label for="message">Message:</label><textarea id="message" name="message" required minlength="10"></textarea>
+            <label for="name">Name:</label><input type="text" id="name" name="name" required minlength="2" maxlength="120" value="<?= escape($formValues['name']) ?>">
+            <label for="email">Email:</label><input type="email" id="email" name="email" required maxlength="190" value="<?= escape($formValues['email']) ?>">
+            <label for="subject">Subject:</label><input type="text" id="subject" name="subject" required minlength="2" maxlength="180" value="<?= escape($formValues['subject']) ?>">
+            <label for="message">Message:</label><textarea id="message" name="message" required minlength="10"><?= escape($formValues['message']) ?></textarea>
             <button type="submit">Send Message</button>
         </form>
     </div>

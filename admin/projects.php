@@ -25,9 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $technologies = trim($_POST['technologies'] ?? '');
         $category = trim($_POST['category'] ?? '');
         $projectUrl = trim($_POST['project_url'] ?? '');
+        $urlParts = $projectUrl !== '' ? parse_url($projectUrl) : false;
+        $hasSafeProjectUrl = $projectUrl === '' || (
+            filter_var($projectUrl, FILTER_VALIDATE_URL) !== false
+            && is_array($urlParts)
+            && isset($urlParts['host'], $urlParts['scheme'])
+            && in_array(strtolower($urlParts['scheme']), ['http', 'https'], true)
+        );
 
-        if (!filter_var($projectUrl, FILTER_VALIDATE_URL) && $projectUrl !== '') {
-            $message = 'Enter a valid project URL or leave it blank.';
+        if (!$hasSafeProjectUrl) {
+            $message = 'Enter a valid HTTP or HTTPS project URL, or leave it blank.';
         } elseif ($title === '' || $description === '') {
             $message = 'Project title and description are required.';
         } else {

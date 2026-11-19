@@ -1,108 +1,64 @@
-const form = document.getElementById("contactForm");
+// Contact form submits normally to PHP so the message is validated and stored server-side.
 
-if (form) {
-
-    form.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const message = document.getElementById("message").value;
-        const formMessage = document.getElementById("formMessage");
-
-        if (name === "" || email === "" || message === "") {
-            formMessage.textContent = "Please fill in all fields.";
-        } else {
-            formMessage.textContent = "Message sent successfully!";
-        }
-
-    });
-
-}
 const themeButton = document.getElementById("themeButton");
 
 if (themeButton) {
-
-    themeButton.addEventListener("click", function() {
-
-        document.body.classList.toggle("dark-mode");
-
-        if (document.body.classList.contains("dark-mode")) {
-            themeButton.textContent = "Light Mode";
-        } else {
-            themeButton.textContent = "Dark Mode";
-        }
-
+    themeButton.addEventListener("click", function () {
+        const darkModeEnabled = document.body.classList.toggle("dark-mode");
+        themeButton.textContent = darkModeEnabled ? "Light Mode" : "Dark Mode";
+        themeButton.setAttribute("aria-pressed", String(darkModeEnabled));
     });
-
 }
+
 const topButton = document.getElementById("topButton");
 
 if (topButton) {
+    const updateTopButton = function () {
+        topButton.style.display = window.scrollY > 200 ? "block" : "none";
+    };
 
-    window.addEventListener("scroll", function() {
+    window.addEventListener("scroll", updateTopButton, { passive: true });
+    updateTopButton();
 
-        if (window.scrollY > 200) {
-            topButton.style.display = "block";
-        } else {
-            topButton.style.display = "none";
-        }
-
+    topButton.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     });
-
-    topButton.addEventListener("click", function() {
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    });
-
 }
+
 const typingText = document.getElementById("typingText");
 
-if (typingText) {
+if (typingText && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const text = typingText.textContent.trim();
+    if (text) {
+        let index = 0;
+        typingText.textContent = "";
 
-    const text = "Information Technology Student";
-    let index = 0;
-
-    function typeText() {
-
-        if (index < text.length) {
-            typingText.textContent += text.charAt(index);
-            index++;
-
-            setTimeout(typeText, 100);
-        }
-
-    }
-
-    typeText();
-
-}
-const filterButtons = document.querySelectorAll(".filter-button");
-const projectCards = document.querySelectorAll(".project-card");
-
-filterButtons.forEach(function(button) {
-
-    button.addEventListener("click", function() {
-
-        const filter = button.getAttribute("data-filter");
-
-        projectCards.forEach(function(project) {
-
-            const category = project.getAttribute("data-category");
-
-            if (filter === "all" || category === filter) {
-                project.style.display = "block";
-            } else {
-                project.style.display = "none";
+        const typeNextCharacter = function () {
+            if (index < text.length) {
+                typingText.textContent += text.charAt(index);
+                index += 1;
+                window.setTimeout(typeNextCharacter, 55);
             }
+        };
 
+        typeNextCharacter();
+    }
+}
+
+const filterButtons = document.querySelectorAll(".filter-button");
+const projectCards = document.querySelectorAll(".project-card[data-category]");
+
+filterButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+        const filter = (button.getAttribute("data-filter") || "all").trim().toLowerCase();
+
+        filterButtons.forEach(function (filterButton) {
+            filterButton.setAttribute("aria-pressed", String(filterButton === button));
         });
 
+        projectCards.forEach(function (project) {
+            const category = (project.getAttribute("data-category") || "").trim().toLowerCase();
+            project.hidden = filter !== "all" && category !== filter;
+        });
     });
-
 });
