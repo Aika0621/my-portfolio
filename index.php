@@ -24,7 +24,7 @@ $siteTitle = $settings ?: 'My Portfolio';
 <body>
 <header>
     <h1><?= escape($siteTitle) ?></h1>
-    <nav>
+    <nav aria-label="Main navigation">
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
         <a href="skills.php">Skills</a>
@@ -47,17 +47,18 @@ $siteTitle = $settings ?: 'My Portfolio';
         </div>
     </section>
 
-    <section>
+    <section class="home-preview-section">
         <h2>My Skills</h2>
         <div class="skills">
             <?php foreach (array_slice($skills, 0, 4) as $skill): ?>
                 <article class="skill-card"><h3><?= escape($skill['name']) ?></h3><p><?= escape($skill['category']) ?> · <?= (int) $skill['level'] ?>%</p></article>
             <?php endforeach; ?>
+            <?php if (!$skills): ?><p>Skills will be added soon.</p><?php endif; ?>
         </div>
-        <p><a href="skills.php">View all skills</a></p>
+        <p class="section-action"><a class="button section-action-link" href="skills.php">View all skills <span aria-hidden="true">→</span></a></p>
     </section>
 
-    <section>
+    <section class="home-preview-section">
         <h2>My Projects</h2>
         <div class="projects">
             <?php foreach (array_slice($projects, 0, 3) as $project): ?>
@@ -67,11 +68,30 @@ $siteTitle = $settings ?: 'My Portfolio';
                     <p><?= escape($project['description']) ?></p>
                 </article>
             <?php endforeach; ?>
+            <?php if (!$projects): ?><p>Projects will be added soon.</p><?php endif; ?>
         </div>
-        <p><a href="projects.php">View all projects</a></p>
+        <p class="section-action"><a class="button section-action-link" href="projects.php">View all projects <span aria-hidden="true">→</span></a></p>
     </section>
 </main>
-<footer><p>&copy; <?= date('Y') ?> <?= escape($profile['name']) ?></p><p><a href="admin/login.php">Admin</a></p></footer>
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-about">
+            <a class="footer-brand" href="index.php"><?= escape($profile['name']) ?> <span>Portfolio</span></a>
+            <p>Thank you for visiting my portfolio. Feel free to explore my work and get in touch.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer navigation">
+            <a href="about.php">About</a>
+            <a href="skills.php">Skills</a>
+            <a href="projects.php">Projects</a>
+            <a href="contact.php">Contact</a>
+        </nav>
+        <a class="footer-admin-link" href="admin/login.php">Admin sign in <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; <?= date('Y') ?> <?= escape($profile['name']) ?>. All rights reserved.</p>
+        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top ↑</a>
+    </div>
+</footer>
 <button id="topButton" type="button" aria-label="Scroll to top">↑</button>
 <script src="js/script.js"></script>
 </body>
