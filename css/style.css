@@ -1,199 +1,29 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f5f5f5;
-    color: #333;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-header h1 { margin: 0 0 15px; }
-nav a { color: white; text-decoration: none; margin: 0 10px; }
-nav a:hover { color: #ffcccb; }
-
-main {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-h2 { color: #333; }
-p { line-height: 1.6; }
-
-.home {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-}
-
-.home-text { flex: 1; }
-.home-image { flex: 1; text-align: center; }
-.home-image img { width: 250px; height: 250px; object-fit: cover; border-radius: 50%; }
-
-.button {
-    display: inline-block;
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-.button:hover { background-color: #555; }
-
-.projects {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 25px;
-}
-
-.project-card {
+/* Public project page image sizing: crop uploads into a consistent thumbnail frame. */
+.projects-page .projects > .project-card {
     min-width: 0;
     overflow: hidden;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.project-card img {
+.projects-page .project-card .project-image-frame {
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #e9edf4;
+}
+
+.projects-page .project-card .project-image-frame img {
     display: block;
     width: 100%;
+    height: 100%;
     max-width: 100%;
-    height: 160px;
+    max-height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-}
-
-.project-card h3 { margin-top: 15px; }
-.project-card p { margin-bottom: 10px; }
-
-.skills {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-.skill-card {
-    background-color: white;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-.skill-card h3 { margin-top: 0; }
-.skill-card p { font-size: 14px; }
-
-.resume-box {
-    background-color: white;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-.resume-box h3 { margin-top: 0; }
-.resume-box li { margin-bottom: 10px; }
-
-.contact-box {
-    background-color: white;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-.contact-box a { color: #333; text-decoration: none; margin-right: 10px; }
-.contact-box a:hover { text-decoration: underline; }
-
-form { max-width: 600px; }
-form label { display: block; margin-top: 15px; margin-bottom: 5px; }
-form input,
-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-form textarea { height: 120px; resize: vertical; }
-form button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin-top: 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-form button:hover { background-color: #555; }
-
-#formMessage { margin-top: 15px; font-weight: bold; }
-
-.dark-mode { background-color: #222; color: white; }
-.dark-mode h2 { color: white; }
-.dark-mode .project-card,
-.dark-mode .skill-card,
-.dark-mode .resume-box,
-.dark-mode .contact-box { background-color: #333; color: white; }
-.dark-mode .contact-box a { color: white; }
-
-#topButton {
-    display: block;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    background-color: #333;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-}
-#topButton:hover { background-color: #555; }
-
-.filter-buttons { margin-bottom: 25px; }
-.filter-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.filter-button:hover { background-color: #555; }
-
-/* Admin project previews */
-.admin-area .admin-preview {
-    width: min(150px, 100%);
-    max-width: 150px;
-    height: 110px;
-    max-height: 110px;
-    object-fit: cover;
-    border-radius: 8px;
+    object-position: center;
 }
 
 @media (max-width: 768px) {
-    nav a { display: inline-block; margin: 5px; }
-    main { margin: 20px auto; padding: 15px; }
-    .home { flex-direction: column; text-align: center; }
-    .home-image img { width: 200px; height: 200px; }
-    .projects { grid-template-columns: 1fr; }
-    .skills { grid-template-columns: 1fr 1fr; }
-    .project-card img { height: 150px; }
-}
-
-@media (max-width: 500px) {
-    header { padding: 15px; }
-    header h1 { font-size: 24px; }
-    nav a { display: block; margin: 8px 0; }
-    .skills { grid-template-columns: 1fr; }
-    .home-image img { width: 180px; height: 180px; }
+    .projects-page .project-card .project-image-frame {
+        height: 170px;
+    }
 }
