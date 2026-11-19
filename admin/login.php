@@ -50,25 +50,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | Aika's Portfolio</title>
+    <title>Admin Sign In | Aika's Portfolio</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="admin.css">
 </head>
-<body class="admin-area">
+<body class="admin-area admin-login-page">
 <main class="admin-login-wrap">
-    <section class="admin-login-card">
-        <h1>Welcome back</h1>
-        <p>Sign in to manage your portfolio.</p>
+    <section class="admin-login-card" aria-labelledby="login-title">
+        <a class="admin-login-brand" href="../index.php" aria-label="Back to portfolio home"><span class="admin-login-brand-mark">A</span><span>Aika <strong>Portfolio</strong></span></a>
+        <div class="admin-login-label"><span class="admin-login-label-dot"></span> ADMIN PORTAL</div>
+        <h1 id="login-title">Welcome back</h1>
+        <p class="admin-login-intro">Sign in to manage your portfolio content.</p>
         <?php if ($errorMessage !== ''): ?>
             <p class="admin-alert" role="alert"><?= escape($errorMessage) ?></p>
         <?php endif; ?>
-        <form method="post" action="login.php">
+        <form method="post" action="login.php" class="admin-login-form">
             <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
-            <p><label for="email">Email</label><input id="email" name="email" type="email" required maxlength="190" autocomplete="username"></p>
-            <p><label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password"></p>
-            <button type="submit">Sign in</button>
+            <p><label for="email">Email address</label><input id="email" name="email" type="email" required maxlength="190" autocomplete="username" placeholder="you@example.com"></p>
+            <p><label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Enter your password"></p>
+            <button type="submit">Sign in to dashboard <span aria-hidden="true">→</span></button>
         </form>
-        <a class="admin-back-link" href="../index.php">← Back to portfolio</a>
+        <div class="admin-login-footer"><a class="admin-back-link" href="../index.php">← Back to portfolio</a><span>Secure admin access</span></div>
     </section>
 </main>
 </body>

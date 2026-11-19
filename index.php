@@ -73,25 +73,6 @@ $siteTitle = $settings ?: 'My Portfolio';
         <p class="section-action"><a class="button section-action-link" href="projects.php">View all projects <span aria-hidden="true">→</span></a></p>
     </section>
 </main>
-<footer class="site-footer">
-    <div class="footer-content">
-        <div class="footer-about">
-            <a class="footer-brand" href="index.php"><?= escape($profile['name']) ?> <span>Portfolio</span></a>
-            <p>Thank you for visiting my portfolio. Feel free to explore my work and get in touch.</p>
-        </div>
-        <nav class="footer-links" aria-label="Footer navigation">
-            <a href="about.php">About</a>
-            <a href="skills.php">Skills</a>
-            <a href="projects.php">Projects</a>
-            <a href="contact.php">Contact</a>
-        </nav>
-        <a class="footer-admin-link" href="admin/login.php">Admin sign in <span aria-hidden="true">↗</span></a>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; <?= date('Y') ?> <?= escape($profile['name']) ?>. All rights reserved.</p>
-        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top ↑</a>
-    </div>
-</footer>
 <button id="topButton" type="button" aria-label="Scroll to top">↑</button>
 <script src="js/script.js"></script>
 </body>
