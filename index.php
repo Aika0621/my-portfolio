@@ -32,6 +32,7 @@ $siteTitle = $settings ?: 'My Portfolio';
         <a href="resume.php">Resume</a>
         <a href="contact.php">Contact</a>
     </nav>
+    <a class="button public-admin-link" href="admin/login.php">Admin Login</a>
     <button id="themeButton" type="button">Dark Mode</button>
 </header>
 <main>
