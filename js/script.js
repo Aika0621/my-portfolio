@@ -1,5 +1,4 @@
-// Keep contact form submission native: PHP receives the POST and saves messages.
-// Do not preventDefault() on #contactForm; doing so blocks the server-side form.
+// Contact form is submitted by PHP. This file does not intercept or prevent POST submissions.
 
 const themeButton = document.getElementById("themeButton");
 
@@ -20,6 +19,7 @@ if (topButton) {
 
     window.addEventListener("scroll", updateTopButton, { passive: true });
     updateTopButton();
+
     topButton.addEventListener("click", function () {
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -29,15 +29,19 @@ const typingText = document.getElementById("typingText");
 
 if (typingText && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     const text = typingText.textContent.trim();
+
     if (text) {
         let index = 0;
         typingText.textContent = "";
+
         const typeNextCharacter = function () {
             if (index < text.length) {
-                typingText.textContent += text.charAt(index++);
+                typingText.textContent += text.charAt(index);
+                index += 1;
                 window.setTimeout(typeNextCharacter, 55);
             }
         };
+
         typeNextCharacter();
     }
 }
@@ -48,9 +52,11 @@ const projectCards = document.querySelectorAll(".project-card[data-category]");
 filterButtons.forEach(function (button) {
     button.addEventListener("click", function () {
         const filter = (button.getAttribute("data-filter") || "all").trim().toLowerCase();
+
         filterButtons.forEach(function (filterButton) {
             filterButton.setAttribute("aria-pressed", String(filterButton === button));
         });
+
         projectCards.forEach(function (project) {
             const category = (project.getAttribute("data-category") || "").trim().toLowerCase();
             project.hidden = filter !== "all" && category !== filter;
