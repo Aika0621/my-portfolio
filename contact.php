@@ -3,7 +3,7 @@
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/security.php';
 
-$message = '';
+$statusMessage = '';
 $profile = $pdo->query('SELECT name, email FROM profile ORDER BY id LIMIT 1')->fetch();
 if (!$profile) {
     $profile = ['name' => 'Aika', 'email' => ''];
@@ -13,27 +13,27 @@ $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     checkCsrfToken();
-    $formValues['name'] = trim($_POST['name'] ?? '');
-    $formValues['email'] = trim($_POST['email'] ?? '');
-    $formValues['subject'] = trim($_POST['subject'] ?? '');
-    $formValues['message'] = trim($_POST['message'] ?? '');
+    foreach ($formValues as $field => $value) {
+        $formValues[$field] = trim($_POST[$field] ?? '');
+    }
 
     if (strlen($formValues['name']) < 2 || strlen($formValues['name']) > 120
         || !filter_var($formValues['email'], FILTER_VALIDATE_EMAIL)
         || strlen($formValues['subject']) < 2 || strlen($formValues['subject']) > 180
-        || strlen($formValues['message']) < 10) {
-        $message = 'Please complete all fields with valid information.';
+        || strlen($formValues['message']) < 10 || strlen($formValues['message']) > 5000) {
+        $statusMessage = 'Please complete all fields with valid information. The message must be 10–5000 characters.';
     } elseif (trim($_POST['website'] ?? '') !== '') {
-        $message = 'Thank you. Your message has been sent.';
+        // Silently accept honeypot submissions without storing them.
+        $statusMessage = 'Thank you. Your message has been sent.';
         $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
     } else {
         try {
             $statement = $pdo->prepare('INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)');
             $statement->execute([$formValues['name'], $formValues['email'], $formValues['subject'], $formValues['message']]);
-            $message = 'Thank you. Your message has been sent.';
+            $statusMessage = 'Thank you. Your message has been sent.';
             $formValues = ['name' => '', 'email' => '', 'subject' => '', 'message' => ''];
         } catch (PDOException $error) {
-            $message = 'The message could not be saved. Please check that MySQL is running and import database/portfolio.sql again.';
+            $statusMessage = 'The message could not be saved. Check that MySQL is running and the portfolio database is imported.';
         }
     }
 }
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="contact-box">
         <h3>Send Me a Message</h3>
-        <?php if ($message !== ''): ?><p id="formMessage" role="status" aria-live="polite"><?= escape($message) ?></p><?php endif; ?>
+        <p id="formMessage" role="status" aria-live="polite"><?= escape($statusMessage) ?></p>
         <form id="contactForm" method="post" action="contact.php">
             <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
             <div style="display:none"><label>Leave blank<input name="website" tabindex="-1" autocomplete="off"></label></div>

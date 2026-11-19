@@ -1,4 +1,5 @@
-// Contact form submits normally to PHP so the message is validated and stored server-side.
+// Keep contact form submission native: PHP receives the POST and saves messages.
+// Do not preventDefault() on #contactForm; doing so blocks the server-side form.
 
 const themeButton = document.getElementById("themeButton");
 
@@ -19,7 +20,6 @@ if (topButton) {
 
     window.addEventListener("scroll", updateTopButton, { passive: true });
     updateTopButton();
-
     topButton.addEventListener("click", function () {
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -32,15 +32,12 @@ if (typingText && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (text) {
         let index = 0;
         typingText.textContent = "";
-
         const typeNextCharacter = function () {
             if (index < text.length) {
-                typingText.textContent += text.charAt(index);
-                index += 1;
+                typingText.textContent += text.charAt(index++);
                 window.setTimeout(typeNextCharacter, 55);
             }
         };
-
         typeNextCharacter();
     }
 }
@@ -51,11 +48,9 @@ const projectCards = document.querySelectorAll(".project-card[data-category]");
 filterButtons.forEach(function (button) {
     button.addEventListener("click", function () {
         const filter = (button.getAttribute("data-filter") || "all").trim().toLowerCase();
-
         filterButtons.forEach(function (filterButton) {
             filterButton.setAttribute("aria-pressed", String(filterButton === button));
         });
-
         projectCards.forEach(function (project) {
             const category = (project.getAttribute("data-category") || "").trim().toLowerCase();
             project.hidden = filter !== "all" && category !== filter;
