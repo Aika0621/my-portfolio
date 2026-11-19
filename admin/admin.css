@@ -2,9 +2,10 @@
 /* Dedicated admin login page styling */
 body.admin-login-page {
     min-height: 100vh;
-    background: radial-gradient(ellipse at 15% 15%, rgba(80, 112, 218, .18), transparent 38%),
-                radial-gradient(ellipse at 85% 85%, rgba(111, 130, 190, .12), transparent 35%),
-                #eef1f7;
+    background:
+        radial-gradient(ellipse at 15% 15%, rgba(80, 112, 218, .18), transparent 38%),
+        radial-gradient(ellipse at 85% 85%, rgba(111, 130, 190, .12), transparent 35%),
+        #eef1f7;
 }
 
 .admin-login-page .admin-login-wrap {
